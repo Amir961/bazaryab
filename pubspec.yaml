@@ -52,6 +52,14 @@ dependencies:
   toastification: ^2.3.0
   internet_connection_checker_plus: ^2.7.2
   flutter_svg: ^2.2.0
+  dropdown_button2: ^2.3.9
+  shamsi_date: ^1.1.1
+  # Maps & Location - KEEP (Used in map_screen.dart)
+  flutter_map: ^8.2.1
+  geolocator: ^11.0.0
+  latlong2: ^0.9.0
+  permission_handler: ^12.0.1
+  image_picker: ^1.2.0
 
 
 dev_dependencies:

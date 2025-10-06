@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:fare/core/network/sharedPref_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -83,6 +84,7 @@ class ApiService {
     }
 
     final uri = _buildUri(path, queryParameters);
+    debugPrint('url_is: $uri');
     final response = await client
         .get(uri, headers: _headers(extra: extraHeaders))
         .timeout(timeout);

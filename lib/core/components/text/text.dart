@@ -41,7 +41,7 @@ class MyText extends StatelessWidget {
         fontFamily: fontFamily ?? AppProvider.of(context).getFontFamily,
         // fontFamily: Fonts.poppins,
         fontSize: AppProvider.of(context).getFontSize(fontSize ?? 14),
-        fontWeight: fontWeight ?? Fonts.light,
+        fontWeight: fontWeight ?? Fonts.medium,
         height: height,
 
         decoration: textDecoration,

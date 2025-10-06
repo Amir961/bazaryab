@@ -101,7 +101,7 @@ class _InputState extends State<Input> {
     //     (isDark ? themeData.dividerColor : MyColors.disableColor);
 
 
-    final borderColor =  Colors.black38;
+    final borderColor =  Colors.grey[700]!;
     final textColor = widget.textColor ??
         (isDark ? textTheme.bodyLarge!.color! : MyColors.cardColor);
     return SizedBox(
@@ -208,7 +208,8 @@ class _InputState extends State<Input> {
                         : widget.hasError
                             ? errorColor
                             : focusColor,
-                    width: 1.5,
+
+                      width: 1.7
                   ),
                   borderRadius: BorderRadius.circular(borderRadius),
                 ),
@@ -220,5 +221,5 @@ class _InputState extends State<Input> {
 
   bool get hasFocus => widget.focusNode?.hasFocus ?? false;
 
-  double get borderRadius => 15;
+  double get borderRadius => 20;
 }

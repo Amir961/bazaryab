@@ -24,6 +24,9 @@ class ChangePasswordEvent extends AuthEvent{
 class LoginEvent extends AuthEvent{
 
 }
+class LogOutEvent extends AuthEvent{
+
+}
 
 
 

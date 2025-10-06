@@ -59,6 +59,8 @@ class MyColors {
   static const Color darkModerate = Color(0xFF3EE286);
   static const Color darkHard = Color(0xFFFA9905);
   static const Color darkVeryHard = Color(0xFFE94560);
+  static const Color selectedDate = Color.fromRGBO(159, 215, 241, 1);
+
 
   /// light theme colors
 

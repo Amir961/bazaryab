@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/components/dialog/dialog_manager.dart';
 import '../../../../core/res/media_res.dart';
+import '../../../../injection_container.dart';
 import '../../../auth/pages/login_screen.dart';
 import '../../../home/pages/home_screen.dart';
 
@@ -73,14 +75,34 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: BlocListener<SplashBloc,SplashState>(
         listener: (BuildContext context, SplashState state) {
-          if(state is GotToLogin)
+          if(state is GoToLogin)
             {
               context.go(LoginScreen.routeName);
             }
-          else if(state is GotToMain)
+          else if(state is GoToMain)
             {
               context.go(HomeScreen.routeName);
             }
+          else if(state is NoNetWork)
+          {
+            sl<DialogManager>().showNoNetDialog(
+              context: context,
+              onTryAgainClick: () {
+
+                BlocProvider.of<SplashBloc>(context).add(GetDataEvent());
+              },
+            );
+          }
+          else if(state is ErrorNetwork)
+          {
+            sl<DialogManager>().showErrorDialog(
+              context: context,
+              onTryAgainClick: () {
+
+                BlocProvider.of<SplashBloc>(context).add(GetDataEvent());
+              }, message: state.message,
+            );
+          }
         },
 
            child: Container(

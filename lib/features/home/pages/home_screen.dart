@@ -4,6 +4,7 @@ import 'package:fare/core/components/text/text.dart';
 import 'package:fare/core/res/constant.dart';
 import 'package:fare/core/res/media_res.dart';
 import 'package:fare/core/utils/values.dart';
+import 'package:fare/features/auth/pages/login_screen.dart';
 import 'package:fare/features/customer/pages/my_customer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 import '../../../core/components/dialog/dialog_manager.dart';
 import '../../../core/utils/enum.dart';
 import '../../../injection_container.dart';
+import '../../customer/pages/add_customer_screen.dart';
 import '../../language/utils/strings.dart';
 import '../../message/pages/messages_screen.dart';
 import '../bloc/home_bloc.dart';
@@ -104,54 +106,59 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 children: [
                   SizedBox(height: 100,),
-                  Stack(
-                    children: [
-                      SizedBox(
+                  InkWell(
+                    onTap: (){
+                      context.push(AddCustomerScreen.routeName);
+                    },
+                    child: Stack(
+                      children: [
+                        SizedBox(
 
-                        height: 60,width: MediaQuery.of(context).size.width-(2*horizontalPadding),),
-                      Positioned(
-                       top: 0,
-                        right: 0,
-                        child: Container(
-                          padding: EdgeInsets.only(right: 10),
-                          alignment: Alignment.centerRight,
-                          height: 55,
-                          width: widthSqaur-20,
-                          decoration: BoxDecoration(
-                            color: MyColors.primaryColor,
-                            borderRadius: BorderRadius.circular(20)
-                          ),
-                          child: SvgPicture.asset(MediaRes.addUser),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-
-                        child: Container(
-                          height: 55,
-                          width: widthSqaur-10,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Theme.of(context).shadowColor,
-                                offset: const Offset(0, 3),
-                                blurRadius: 6,
-                                spreadRadius: 0,
-                              )
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: MyText(
-                              textAlign: TextAlign.center,
-                              text: 'ثبت مشتری جدید',fontWeight: FontWeight.bold,color: MyColors.primaryColor,fontSize: 17,),
+                          height: 60,width: MediaQuery.of(context).size.width-(2*horizontalPadding),),
+                        Positioned(
+                         top: 0,
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.only(right: 10),
+                            alignment: Alignment.centerRight,
+                            height: 55,
+                            width: widthSqaur-20,
+                            decoration: BoxDecoration(
+                              color: MyColors.primaryColor,
+                              borderRadius: BorderRadius.circular(20)
+                            ),
+                            child: SvgPicture.asset(MediaRes.addUser),
                           ),
                         ),
-                      ),
-                    ],
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+
+                          child: Container(
+                            height: 55,
+                            width: widthSqaur-10,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).shadowColor,
+                                  offset: const Offset(0, 3),
+                                  blurRadius: 6,
+                                  spreadRadius: 0,
+                                )
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: MyText(
+                                textAlign: TextAlign.center,
+                                text: 'ثبت مشتری جدید',fontWeight: FontWeight.bold,color: MyColors.primaryColor,fontSize: 17,),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
 
                   SizedBox(height: 35 ,),
@@ -340,8 +347,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget get _menuBar => BlocBuilder<HomeBloc,HomeState>(
 
 
-      builder: (context,state)=>   ListView(
-        padding: EdgeInsets.zero,
+      builder: (context,state)=>   Column(
+       // padding: EdgeInsets.zero,
         children: [
            DrawerHeader(
               decoration: BoxDecoration(color: MyColors.primaryColor),
@@ -357,16 +364,67 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )
           ),
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text("خانه"),
-            onTap: () => Navigator.pop(context),
+           Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 40,),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MyText(text: 'استان فعالیت:', fontWeight: FontWeight.bold,color: Colors.black87,),
+                  SizedBox(width: 5,),
+                  MyText(text: '${state.user?.state??''}', fontWeight: FontWeight.normal,color: Colors.grey,),
+
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MyText(text: 'شهر فعالیت:', fontWeight: FontWeight.bold,color: Colors.black87,),
+                  SizedBox(width: 5,),
+                  MyText(text: '${state.user?.city??''}', fontWeight: FontWeight.normal,color: Colors.grey,),
+
+                ],
+              ),
+            //  Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MyText(text: 'منطقه فعالیت:', fontWeight: FontWeight.bold,color: Colors.black87,),
+                  SizedBox(width: 5,),
+                  MyText(text: '${state.user?.city??''}', fontWeight: FontWeight.normal,color: Colors.grey,),
+
+                ],
+              ),
+
+              SizedBox(height: 60,),
+            ],
           ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text("تنظیمات"),
-            onTap: () => Navigator.pop(context),
+          Expanded(child: SizedBox()),
+          InkWell(
+            onTap: (){
+              sl<DialogManager>().showYesNoDialog(context: context, yesClick: ()async{
+
+
+                // FlutterBackgroundService().invoke('stopTimer');
+                // FlutterBackgroundService().invoke('stopService');
+                context.pop();
+
+                context.go(LoginScreen.routeName);
+
+              }, description: 'میخواهید از حساب کاربری خود خارج شوید؟');
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              SvgPicture.asset(MediaRes.exit),
+              SizedBox(width: 5,),
+              MyText(text: 'خروج از حساب کاربری' , fontWeight: FontWeight.bold,color: Colors.black87,)
+            ],),
           ),
+          SizedBox(height: 40,),
+
         ],
       ), );
 }

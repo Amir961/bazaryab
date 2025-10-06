@@ -6,20 +6,26 @@ import '../../utils/assets.dart';
 
 
 class FeedbackButtonWidget extends StatelessWidget {
-  final double? size;
+  final double? width;
+  final double? height;
   final Widget? child;
+  final Color? backGround;
+  final bool isBorder;
   final EdgeInsetsGeometry? margin;
   final Function()? onClick;
   final Function()? onTapUp;
   final Function()? onTapDown;
   const FeedbackButtonWidget({
     super.key,
-    this.size,
+    this.isBorder=false,
+    this.width,
+    this.height,
     this.child,
     this.margin,
      this.onClick,
      this.onTapUp,
      this.onTapDown,
+     this.backGround,
   });
 
   @override
@@ -27,11 +33,12 @@ class FeedbackButtonWidget extends StatelessWidget {
     return
       Container(
         width: _size,
-        height: _size,
+        height: height,
         margin: margin,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: backGround??Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(10),
+          border: isBorder?Border.all(color: Colors.grey):null
         ),
         alignment: Alignment.center,
         child:
@@ -57,5 +64,5 @@ class FeedbackButtonWidget extends StatelessWidget {
       );
   }
 
-  double get _size => size ?? 52;
+  double get _size => width ?? 52;
 }

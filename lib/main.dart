@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fare/features/language/utils/strings.dart';
+import 'package:fare/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +47,10 @@ void main() async{
         ),
         BlocProvider<AppThemeBloc>(
           create: (context) => sl<AppThemeBloc>(),
+        ),
+
+        BlocProvider<SplashBloc>(
+          create: (context) => sl<SplashBloc>(),
         ),
 
 

@@ -8,6 +8,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/bloc/auth_bloc.dart';
 import '../../features/auth/pages/login_screen.dart';
+import '../../features/customer/bloc/add_customer_bloc.dart';
+import '../../features/customer/pages/add_customer_screen.dart';
 import '../../features/home/bloc/home_bloc.dart';
 import '../../features/home/pages/home_screen.dart';
 import '../../features/message/bloc/messages_bloc.dart';
@@ -27,17 +29,19 @@ final GoRouter router = GoRouter (
     GoRoute(
       path: SplashScreen.routeName,
       builder: (BuildContext context, GoRouterState state) {
-        return  MultiBlocProvider(
-          key: const ValueKey(3),
-          providers: [
+        return   const SplashScreen();
 
-            BlocProvider<SplashBloc>(
-              create: (context) => sl<SplashBloc>(),
-            ),
-
-          ],
-          child: const SplashScreen(),
-        );
+        //   MultiBlocProvider(
+        //   key: const ValueKey(3),
+        //   providers: [
+        //
+        //     BlocProvider<SplashBloc>(
+        //       create: (context) => sl<SplashBloc>(),
+        //     ),
+        //
+        //   ],
+        //   child: const SplashScreen(),
+        // );
 
 
 
@@ -107,6 +111,21 @@ final GoRouter router = GoRouter (
         return  BlocProvider.value(
           value: sl<MessagesBloc>(),
           child: MessagesScreen(),
+        );
+
+
+
+
+
+      },
+    ),
+
+    GoRoute(
+      path: AddCustomerScreen.routeName,
+      builder: (BuildContext context, GoRouterState state) {
+        return  BlocProvider.value(
+          value: sl<AddCustomerBloc>(),
+          child: AddCustomerScreen(),
         );
 
 

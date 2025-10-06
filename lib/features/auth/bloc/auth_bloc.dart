@@ -22,13 +22,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ApiService  apiService;
   final SharedPrefService  sharedPrefService;
 
-    AuthBloc(this.apiService,this.sharedPrefService) : super(AuthState(userName: '', password: '', statusButton: StatusButton.none, message: '')) {
+    AuthBloc(this.apiService,this.sharedPrefService) : super(AuthState(userName: '', password: '', statusButton: StatusButton.none, message: '', statusLogOut: StatusButton.none)) {
 
     on<LoginEvent>(_onLoginEvent);
     on<ChangeUserNameEvent>(_onChangeUserNameEvent);
     on<ChangePasswordEvent>(_onChangePasswordEvent);
+    on<LogOutEvent>(_onLogOutEvent);
 
   }
+
+  _onLogOutEvent(LogOutEvent event,
+      Emitter<AuthState> emit,) async {
+
+
+    emit(state.copyWith(
+
+        statusLogOut: StatusButton.loading));
+
+
+
+
+    await sharedPrefService.clear();
+     apiService.setToken('');
+
+
+
+
+
+        emit(state.copyWith(
+
+          password: '',
+          userName: '',
+
+          statusLogOut: StatusButton.success,));
+      }
+
+
+
 
 
   _onChangeUserNameEvent(
@@ -46,6 +76,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     emit(state.copyWith(password:event.password));
   }
+
 
 
 
@@ -80,7 +111,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
 
 
-    } on ConnectionException catch (e) {
+    }
+    on ConnectionException catch (e) {
       debugPrint('error_is: ${e.toString()}');
       emit(state.copyWith(statusButton: StatusButton.noInternet));
 

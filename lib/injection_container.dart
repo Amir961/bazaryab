@@ -14,6 +14,7 @@ import 'core/network/sharedPref_service.dart';
 import 'core/utils/language_helper.dart';
 import 'core/utils/theme_helper.dart';
 import 'features/auth/bloc/auth_bloc.dart';
+import 'features/customer/bloc/add_customer_bloc.dart';
 import 'features/customer/bloc/list_customer_bloc.dart';
 import 'features/home/bloc/home_bloc.dart';
 import 'features/language/data/data_sources/language_data_source.dart';
@@ -86,10 +87,11 @@ Future<void> init() async {
    sl.registerLazySingleton(() => AppLanguageBloc(getLanguage: sl(), helper: sl(), setLanguage: sl()));
   sl.registerLazySingleton(() => AppThemeBloc(getAppTheme: sl(), setAppTheme: sl(), helper: sl()));
   sl.registerLazySingleton(() => AuthBloc( sl(),sl()));
-  sl.registerLazySingleton(() => SplashBloc( sl(),));
+  sl.registerLazySingleton(() => SplashBloc( sl(),sl()));
   sl.registerLazySingleton(() => HomeBloc( sl(),sl()));
   sl.registerLazySingleton(() => ListCustomerBloc( sl()));
   sl.registerLazySingleton(() => MessagesBloc( sl()));
+  sl.registerFactory(() => AddCustomerBloc( sl()));
 
 
 

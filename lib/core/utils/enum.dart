@@ -8,3 +8,10 @@ enum StatusButton {
   noInternet
 
 }
+
+
+enum PageAddCustomer {
+initInfo,
+completeInfo
+
+}
