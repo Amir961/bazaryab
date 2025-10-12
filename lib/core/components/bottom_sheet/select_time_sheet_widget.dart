@@ -355,7 +355,7 @@ class _SelectTimeSheetWidgetState extends State<SelectTimeSheetWidget> {
           }
           else
             {
-              context.pop('$selectedHour:$selectedMinute ${selectedJalali!.toShortShow()}');
+              context.pop('$selectedHour:${minutesList[selectedMinute]} ${selectedJalali!.toShortShow()}');
             }
         },
 

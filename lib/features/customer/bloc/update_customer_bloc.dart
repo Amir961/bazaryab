@@ -15,7 +15,7 @@ part 'update_customer_state.dart';
 
 class UpdateCustomerBloc extends Bloc<UpdateCustomerEvent, UpdateCustomerState> {
   ApiService apiService;
-  UpdateCustomerBloc(this.apiService) : super(UpdateCustomerState(loc: null,  message: '', statusButtonOtp: StatusButton.none, statusButtonAdd:  StatusButton.none, typeBussiness: null, kindBussiness: null, nameSet: '', nameOwnerSet: '', identity: '', responsiblePosition: null, responsibleName: '', responsiblePhoneNumber: '', responsibleCode: '', visitDate: null, visitTime: null, result: null, description: '', file: null, pageAddCustomer: PageAddCustomer.loading, phoneNumberSet: '', key: '', statusButtonGetCity: StatusButton.none,statusButtonGetState: StatusButton.none,selectedCity: null,selectedState: null, listCity: [],listState: [])) {
+  UpdateCustomerBloc(this.apiService) : super(UpdateCustomerState(loc: null,  message: '', statusButtonAdd:  StatusButton.none, typeBussiness: null, kindBussiness: null, nameSet: '', nameOwnerSet: '', identity: '', responsiblePosition: null, responsibleName: '', responsiblePhoneNumber: '', responsibleCode: '', visitDate: null, visitTime: null, result: null, description: '', file: null, pageAddCustomer: PageAddCustomer.loading, phoneNumberSet: '', key: '', statusButtonGetCity: StatusButton.none,statusButtonGetState: StatusButton.none,selectedCity: null,selectedState: null, listCity: [],listState: [])) {
 
     on<ChangeTypeBussiness>(_onChangeTypeBussiness);
     on<ChangeKindBussiness>(_onChangeKindBussiness);
@@ -34,12 +34,80 @@ class UpdateCustomerBloc extends Bloc<UpdateCustomerEvent, UpdateCustomerState> 
     on<ChangeLocation>(_onChangeLocation);
     on<ChangeTypePage>(_onChangeTypePage);
     on<ChangePhoneNumberSet>(_onChangePhoneNumberSet);
-    on<GetOtp>(_onGetOtp);
+    //on<GetOtp>(_onGetOtp);
     // on<GetOtp>(_onGetOtp);
     on<GetStateEvent>(_onGetStateEvent);
     on<GetCityEvent>(_onGetCityEvent);
     on<ChangeSelectedState>(_onChangeSelectedState);
     on<ChangeSelectedCity>(_onChangeSelectedCity);
+    on<UpdateCustomer>(_onUpdateCustomer);
+  }
+
+  _onUpdateCustomer(
+      UpdateCustomer event,
+      Emitter<UpdateCustomerState> emit,
+      ) async {
+
+
+
+    emit(state.copyWith(statusButtonAdd: StatusButton.loading));
+    Map<String, dynamic> variables = {
+    };
+
+
+    // variables.addAll({"announcement_id":state.detailsSalonModels.id});
+    variables.addAll({"owner_name": state.nameOwnerSet});
+    variables.addAll({"owner_national_id": state.identity});
+    variables.addAll({"position": state.responsiblePosition?.key??''});
+    variables.addAll({"in_charge_name": state.responsibleName});
+    variables.addAll({"in_charge_mobile": state.responsiblePhoneNumber});
+    variables.addAll({"industry": state.kindBussiness?.key??''});
+    variables.addAll({"city_id": state.selectedCity?.id});
+    variables.addAll({"lat": state.loc?.latitude??''});
+    variables.addAll({"lng": state.loc?.longitude??''});
+    variables.addAll({"address": 'بلوار امیرکبیر'});
+    variables.addAll({"phone": state.phoneNumberSet});
+    variables.addAll({"description": state.description});
+    variables.addAll({"contact_type": 'تماس تصویری'});
+    variables.addAll({"visit_date": state.visitDate?.split(' ')[1]});
+    variables.addAll({"visit_time": state.visitDate?.split(' ')[0]});
+    variables.addAll({"result": state.result?.key});
+    variables.addAll({"type":state.typeBussiness?.key});
+    // variables.addAll({"otp_code":state.responsibleCode });
+    // variables.addAll({"otp_key": state.key});
+
+    debugPrint('variables_is: ${variables.toString()}');
+
+    try {
+      final responseJson= await apiService.put('customer/${event.id}',queryParameters: variables);
+
+      debugPrint('data_is: ${responseJson.toString()}');
+      final key= responseJson['data'];
+
+
+
+
+
+
+
+      emit(state.copyWith(statusButtonAdd: StatusButton.success));
+
+
+
+    } on ConnectionException catch (e) {
+      debugPrint('error_is: ${e.toString()}');
+      emit(state.copyWith(statusButtonAdd: StatusButton.noInternet));
+
+    } on ApiException catch (e) {
+      debugPrint('error_is: ${e.toString()}');
+      emit(state.copyWith(statusButtonAdd: StatusButton.failed,message: e.message));
+
+    } catch (e) {
+      emit(state.copyWith(statusButtonAdd: StatusButton.failed,message: e.toString()));
+
+    }
+
+
   }
 
 
@@ -139,43 +207,43 @@ class UpdateCustomerBloc extends Bloc<UpdateCustomerEvent, UpdateCustomerState> 
   }
 
 
-  _onGetOtp(
-      GetOtp event,
-      Emitter<UpdateCustomerState> emit,
-      ) async {
-
-    emit(state.copyWith(statusButtonOtp: StatusButton.loading));
-
-    try {
-      final responseJson= await apiService.post('customer/otp',queryParameters: {
-        "in_charge_mobile": state.responsiblePhoneNumber,
-      } );
-
-      final key= responseJson['data']['key'];
-
-
-
-
-
-      emit(state.copyWith(statusButtonOtp: StatusButton.success,key: key));
-
-
-
-    } on ConnectionException catch (e) {
-      debugPrint('error_is: ${e.toString()}');
-      emit(state.copyWith(statusButtonOtp: StatusButton.noInternet));
-
-    } on ApiException catch (e) {
-      debugPrint('error_is: ${e.toString()}');
-      emit(state.copyWith(statusButtonOtp: StatusButton.failed,message: e.message));
-
-    } catch (e) {
-      emit(state.copyWith(statusButtonOtp: StatusButton.failed,message: e.toString()));
-
-    }
-
-
-  }
+  // _onGetOtp(
+  //     GetOtp event,
+  //     Emitter<UpdateCustomerState> emit,
+  //     ) async {
+  //
+  //   emit(state.copyWith(statusButtonOtp: StatusButton.loading));
+  //
+  //   try {
+  //     final responseJson= await apiService.post('customer/otp',queryParameters: {
+  //       "in_charge_mobile": state.responsiblePhoneNumber,
+  //     } );
+  //
+  //     final key= responseJson['data']['key'];
+  //
+  //
+  //
+  //
+  //
+  //     emit(state.copyWith(statusButtonOtp: StatusButton.success,key: key));
+  //
+  //
+  //
+  //   } on ConnectionException catch (e) {
+  //     debugPrint('error_is: ${e.toString()}');
+  //     emit(state.copyWith(statusButtonOtp: StatusButton.noInternet));
+  //
+  //   } on ApiException catch (e) {
+  //     debugPrint('error_is: ${e.toString()}');
+  //     emit(state.copyWith(statusButtonOtp: StatusButton.failed,message: e.message));
+  //
+  //   } catch (e) {
+  //     emit(state.copyWith(statusButtonOtp: StatusButton.failed,message: e.toString()));
+  //
+  //   }
+  //
+  //
+  // }
 
   _onChangePhoneNumberSet(
       ChangePhoneNumberSet event,

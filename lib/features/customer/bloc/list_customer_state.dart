@@ -3,7 +3,7 @@ part of 'list_customer_bloc.dart';
  class ListCustomerState extends Equatable {
   final StatusButton statusButton;
   final String message;
-  final List listCustomer;
+  final List<Customer> listCustomer;
   const ListCustomerState({required this.listCustomer,required this.statusButton,required this.message});
 
   @override
@@ -14,7 +14,7 @@ part of 'list_customer_bloc.dart';
 
    String? message,
    StatusButton? statusButton,
-    List? listCustomer
+    List<Customer>? listCustomer
   })=> ListCustomerState(
 
    listCustomer: listCustomer ?? this.listCustomer,

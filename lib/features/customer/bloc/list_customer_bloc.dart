@@ -5,6 +5,7 @@ import 'package:fare/core/utils/enum.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../auth/model/user_model.dart';
+import '../models/customer.dart';
 
 part 'list_customer_event.dart';
 part 'list_customer_state.dart';
@@ -26,15 +27,20 @@ class ListCustomerBloc extends Bloc<ListCustomerEvent, ListCustomerState> {
     try {
       final responseJson= await apiService.get('customer',queryParameters:{}  );
 
-    //  final user =   User.fromJson(responseJson['data']['user']);
+      final itemsJson = responseJson['data'] as List<dynamic>?;
+
+      final listCustomer = itemsJson?.map((e) {
+        return Customer.fromJson(e);
+      }).toList();
+
+      debugPrint('lenght_is:${listCustomer?.length}');
 
 
 
 
 
 
-
-      emit(state.copyWith(statusButton: StatusButton.success));
+      emit(state.copyWith(statusButton: StatusButton.success,listCustomer: listCustomer));
 
 
 

@@ -104,7 +104,7 @@ class GetOtp extends AddCustomerEvent{
 
 }
 
-class AddCustomerOtp extends AddCustomerEvent{
+class AddCustomer extends AddCustomerEvent{
 
 }
 

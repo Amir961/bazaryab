@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../core/components/button/button_widget.dart';
@@ -21,10 +22,12 @@ import '../../../injection_container.dart';
 import '../../language/utils/strings.dart';
 import '../../splash/presentation/bloc/splash_bloc.dart';
 import '../../splash/presentation/models/common_setting.dart';
+import '../models/customer.dart';
 
 class UpdateResultScreen extends StatefulWidget {
   static const routeName = '/update-result-screen';
-  const UpdateResultScreen({super.key});
+  final Customer customer;
+  const UpdateResultScreen({required this.customer,super.key});
 
   @override
   State<UpdateResultScreen> createState() => _UpdateResultScreenState();
@@ -33,6 +36,18 @@ class UpdateResultScreen extends StatefulWidget {
 class _UpdateResultScreenState extends State<UpdateResultScreen> {
   final TextEditingController _descriptionTextEditingController =
   TextEditingController();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   final list= BlocProvider.of<SplashBloc>(context).state.dataApp?.customerStatus;
+   final value= list!.where((element)=>element.title==widget.customer.result).toList();
+    BlocProvider.of<UpdateResultBloc>(context).add(ChangeResult(value: value.first));
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
@@ -240,6 +255,8 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
 
                   );
 
+                  debugPrint('selectDate_is: $selectDate');
+
                   if(selectDate!=null)
                   {
                     BlocProvider.of<UpdateResultBloc>(context).add(ChangeVisitDate(value:selectDate));
@@ -273,7 +290,7 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
 
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: MyText(text: state.visitDate==null? '----/--/--' :state.visitDate!,color: state.visitDate==null?Colors.grey:Colors.black,),
+                              child: MyText(text: state.visitDate.isEmpty? '----/--/--' :state.visitDate,color: state.visitDate.isEmpty?Colors.grey:Colors.black,),
                             ),
                             SvgPicture.asset(MediaRes.calender),
 
@@ -292,13 +309,25 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
 
       BlocConsumer<UpdateResultBloc,UpdateResultState>(
           listenWhen: (previous, current) =>  previous.statusButton != current.statusButton ,
-          listener: (context,state){
+          listener: (context,state)async{
 
             if(state.statusButton == StatusButton.success)
             {
 
               // BlocProvider.of<AddCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
 
+              toastification.show(
+                  type: ToastificationType.success,
+                  style: ToastificationStyle.minimal,
+                  backgroundColor: Colors.grey[100],
+                  //overlayState: globalNavigatorKey.currentState?.overlay,
+                  autoCloseDuration: const Duration(seconds: 3),
+                  title: MyText(text:'موفق',color: Colors.black87,fontWeight: FontWeight.bold,),
+                  description: MyText(text:'مشتری شما با موفقیت بروزرسانی شد',color: Colors.black87,)
+              );
+              await Future.delayed(Duration(seconds: 1));
+
+              context.pop(true);
 
             }
 
@@ -308,7 +337,7 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
                 context: context,
                 onTryAgainClick: () {
 
-                  BlocProvider.of<UpdateResultBloc>(context).add(UpdateResult());
+                  BlocProvider.of<UpdateResultBloc>(context).add(UpdateResult(id: widget.customer.id.toString()));
                 },
               );
             }
@@ -331,19 +360,19 @@ class _UpdateResultScreenState extends State<UpdateResultScreen> {
           },
 
           buildWhen: (previous, current) =>
-          previous.statusButton != current.statusButton ,
+          previous.statusButton != current.statusButton|| previous.result != current.result  || previous.description != current.description ,
 
           builder: (context,state) { return Column(
             children: [
               SizedBox(height: 20,),
               ButtonWidget(
 
-                 isEnable: true,
+                 isEnable: state.result!=null && state.description.trim().isNotEmpty && state.visitDate.isNotEmpty,
 
 
                 onClick: () {
 
-                  BlocProvider.of<UpdateResultBloc>(context).add(UpdateResult());
+                  BlocProvider.of<UpdateResultBloc>(context).add(UpdateResult(id: widget.customer.id.toString()));
 
                 },
                 loading: state.statusButton == StatusButton.loading,

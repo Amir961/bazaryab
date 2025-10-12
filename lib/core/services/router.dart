@@ -1,6 +1,7 @@
 
 
 import 'package:fare/features/customer/bloc/list_customer_bloc.dart';
+import 'package:fare/features/customer/models/customer.dart';
 import 'package:fare/features/customer/pages/my_customer_screen.dart';
 import 'package:fare/features/customer/pages/update_result_screen.dart';
 import 'package:flutter/material.dart';
@@ -113,9 +114,10 @@ final GoRouter router = GoRouter (
     GoRoute(
       path: UpdateCustomerScreen.routeName,
       builder: (BuildContext context, GoRouterState state) {
+        final customer = state.extra as Customer;
            return  BlocProvider.value(
           value: sl<UpdateCustomerBloc>(),
-          child: UpdateCustomerScreen(),
+          child: UpdateCustomerScreen(customer: customer,),
         );
 
 
@@ -158,9 +160,10 @@ final GoRouter router = GoRouter (
     GoRoute(
       path: UpdateResultScreen.routeName,
       builder: (BuildContext context, GoRouterState state) {
+        final customer = state.extra as Customer;
         return  BlocProvider.value(
           value: sl<UpdateResultBloc>(),
-          child: UpdateResultScreen(),
+          child: UpdateResultScreen(customer: customer,),
         );
 
 

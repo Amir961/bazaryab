@@ -23,6 +23,7 @@ import '../../../core/utils/values.dart';
 import '../../../injection_container.dart';
 import '../../language/utils/strings.dart';
 import '../bloc/list_customer_bloc.dart';
+import '../models/customer.dart';
 
 class MyCustomerScreen extends StatefulWidget {
   static const routeName = '/my-customer-screen';
@@ -130,7 +131,7 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
                   onRefresh: () async{
                     getData();
                   },
-                  child: state.listCustomer.isNotEmpty?
+                  child: state.listCustomer.isEmpty?
                   EmptyWidget(updateData:
 
                   InkWell(
@@ -145,10 +146,10 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
 
 
                   ListView.builder(
-                      itemCount: 3,
-                      //itemCount: state.listCustomer.length,
+                     // itemCount: 3,
+                      itemCount: state.listCustomer.length,
                       itemBuilder: (context,index) {
-                        return myContainer(state.listCustomer,  );
+                        return myContainer(state.listCustomer[index],  );
                       }
                   ),
                 );
@@ -161,7 +162,7 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
           });
 
 
-  Widget myContainer(customer){
+  Widget myContainer(Customer customer){
     return  Container(
       width: double.infinity,
 
@@ -181,8 +182,13 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
             children: [
               MyText(text: 'مجموعه غذایی مینو',fontWeight: FontWeight.bold,color: Colors.black,fontSize: 16,),
               InkWell(
-                onTap: (){
-                  context.push(UpdateCustomerScreen.routeName);
+                onTap: ()async{
+
+                  final result= await   context.push(UpdateCustomerScreen.routeName,extra: customer);
+                  if(result !=null && result as bool)
+                  {
+                    getData();
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 30.0),
@@ -197,7 +203,7 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
             children: [
               SvgPicture.asset(MediaRes.map),
               SizedBox(width: 5,),
-              MyText(text: 'مجموعه غذایی مینو',fontWeight: FontWeight.bold,color: MyColors.primaryColor,fontSize: 14),
+              MyText(text: customer.address??'',fontWeight: FontWeight.bold,color: MyColors.primaryColor,fontSize: 14),
 
             ],
           ),
@@ -208,7 +214,7 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
               MyText(text: 'آخرین مراجعه:',fontWeight: FontWeight.w500,color: Colors.black87,fontSize: 14),
 
               SizedBox(width: 5,),
-              MyText(text: '1404/07/06',fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13),
+              MyText(text: customer.visit??'',fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13),
 
             ],
           ),
@@ -219,7 +225,7 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
               MyText(text: 'مالک مجموعه:',fontWeight: FontWeight.w500,color: Colors.black87,fontSize: 14),
 
               SizedBox(width: 5,),
-              MyText(text: 'محسن احمدی',fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13),
+              MyText(text: customer.ownerName??'',fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13),
 
             ],
           ),
@@ -230,7 +236,7 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
               MyText(text: 'مسئول هماهنگی:',fontWeight: FontWeight.w500,color: Colors.black87,fontSize: 14),
 
               SizedBox(width: 5,),
-              MyText(text: 'محسن احمدی',fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13),
+              MyText(text: customer.inChargeName??'',fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13),
 
             ],
           ),
@@ -241,7 +247,7 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
               MyText(text: 'شماره همراه مسئول:',fontWeight: FontWeight.w500,color: Colors.black87,fontSize: 14),
 
               SizedBox(width: 5,),
-              MyText(text: '09125486851',fontWeight: FontWeight.w400,color: MyColors.primaryColor,fontSize: 13),
+              MyText(text: customer.inChargeMobile??'',fontWeight: FontWeight.w400,color: MyColors.primaryColor,fontSize: 13),
 
             ],
           ),
@@ -252,7 +258,7 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
               MyText(text: 'تلفن ثابت مجموعه:',fontWeight: FontWeight.w500,color: Colors.black87,fontSize: 14),
 
               SizedBox(width: 5,),
-              MyText(text: '0313365487',fontWeight: FontWeight.w400,color: MyColors.primaryColor,fontSize: 13),
+              MyText(text: customer.phone??'',fontWeight: FontWeight.w400,color: MyColors.primaryColor,fontSize: 13),
 
             ],
           ),
@@ -263,31 +269,36 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
               MyText(text: 'نتیجه مراجعه:',fontWeight: FontWeight.w500,color: Colors.black87,fontSize: 14),
 
               SizedBox(width: 5,),
-              MyText(text: 'مراجعه مجدد',fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13),
+              MyText(text: customer.result??'',fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13),
 
             ],
           ),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: 'توضیحات: ',
-                  style: TextStyle(
-                    fontFamily: Fonts.iranSans,
+          Row(
+            children: [
+              RichText(
+                text: TextSpan(
 
-                      fontWeight: FontWeight.w500,color: Colors.black87,fontSize: 14
-                  ),
-                ),
-                TextSpan(
-                  text: 'این یک متن آزمایش است.این یک متن آزمایش است.این یک متن آزمایش است.این یک متن آزمایش است.این یک متن آزمایش است. ',
-                  style: TextStyle(
-                    fontFamily: Fonts.iranSans,
-                    fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13
-                  ),
-                ),
+                  children: [
+                    TextSpan(
+                      text: 'توضیحات: ',
+                      style: TextStyle(
+                        fontFamily: Fonts.iranSans,
 
-              ],
-            ),
+                          fontWeight: FontWeight.w500,color: Colors.black87,fontSize: 14
+                      ),
+                    ),
+                    TextSpan(
+                      text: customer.description,
+                      style: TextStyle(
+                        fontFamily: Fonts.iranSans,
+                        fontWeight: FontWeight.w400,color: Colors.grey[600],fontSize: 13
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+            ],
           ),
 
           Padding(
@@ -297,9 +308,13 @@ class _MyCustomerScreenState extends State<MyCustomerScreen> {
               // isEnable: true,
               isEnable: true ,
 
-              onClick: () {
+              onClick: ()  async{
 
-                  context.push(UpdateResultScreen.routeName);
+               final result= await   context.push(UpdateResultScreen.routeName,extra: customer);
+               if(result !=null && result as bool)
+                 {
+                   getData();
+                 }
 
               },
               loading:false,

@@ -3,7 +3,7 @@ part of 'update_customer_bloc.dart';
 
 
 class UpdateCustomerState extends Equatable {
-  final StatusButton statusButtonOtp;
+
   final StatusButton statusButtonAdd;
 
   final StatusButton statusButtonGetState;
@@ -34,10 +34,10 @@ class UpdateCustomerState extends Equatable {
   final LatLng? loc;
   final PageAddCustomer pageAddCustomer;
 
-  UpdateCustomerState({required this.listCity,required this.listState,required this.selectedCity,required this.selectedState,required this.statusButtonGetCity,required this.statusButtonGetState,required this.key,required this.phoneNumberSet,required this.pageAddCustomer,required this.loc,required this.message,required this.statusButtonOtp, required this.statusButtonAdd, required this.typeBussiness, required this.kindBussiness, required this.nameSet, required this.nameOwnerSet, required this.identity, required this.responsiblePosition, required this.responsibleName, required this.responsiblePhoneNumber, required this.responsibleCode, required this.visitDate, required this.visitTime, required this.result, required this.description, required this.file});
+  UpdateCustomerState({required this.listCity,required this.listState,required this.selectedCity,required this.selectedState,required this.statusButtonGetCity,required this.statusButtonGetState,required this.key,required this.phoneNumberSet,required this.pageAddCustomer,required this.loc,required this.message, required this.statusButtonAdd, required this.typeBussiness, required this.kindBussiness, required this.nameSet, required this.nameOwnerSet, required this.identity, required this.responsiblePosition, required this.responsibleName, required this.responsiblePhoneNumber, required this.responsibleCode, required this.visitDate, required this.visitTime, required this.result, required this.description, required this.file});
   @override
   // TODO: implement props
-  List<Object?> get props => [loc,selectedState,selectedCity,listCity,listState,statusButtonGetState,statusButtonGetCity,key,phoneNumberSet,pageAddCustomer,message,file,description,result,visitTime,visitDate,responsibleCode,responsiblePhoneNumber,responsibleName,responsiblePosition,identity,identity,nameOwnerSet,nameSet,statusButtonOtp,statusButtonAdd,typeBussiness,kindBussiness];
+  List<Object?> get props => [loc,selectedState,selectedCity,listCity,listState,statusButtonGetState,statusButtonGetCity,key,phoneNumberSet,pageAddCustomer,message,file,description,result,visitTime,visitDate,responsibleCode,responsiblePhoneNumber,responsibleName,responsiblePosition,identity,identity,nameOwnerSet,nameSet,statusButtonAdd,typeBussiness,kindBussiness];
 
   UpdateCustomerState copyWith({
     List<City>? listState,
@@ -47,7 +47,7 @@ class UpdateCustomerState extends Equatable {
     PageAddCustomer? pageAddCustomer,
     StatusButton? statusButtonGetCity,
     StatusButton? statusButtonGetState,
-    StatusButton? statusButtonOtp,
+
     StatusButton? statusButtonAdd,
     UserType? typeBussiness,
     UserType? kindBussiness,
@@ -80,7 +80,7 @@ class UpdateCustomerState extends Equatable {
     pageAddCustomer: pageAddCustomer?? this.pageAddCustomer,
 
     message: message?? this.message,
-    statusButtonOtp: statusButtonOtp?? this.statusButtonOtp,
+
     statusButtonAdd: statusButtonAdd?? this.statusButtonAdd,
     typeBussiness: typeBussiness?? this.typeBussiness,
     kindBussiness: kindBussiness?? this.kindBussiness,
@@ -113,7 +113,7 @@ class UpdateCustomerState extends Equatable {
     pageAddCustomer: pageAddCustomer,
 
     message: message,
-    statusButtonOtp: statusButtonOtp,
+
     statusButtonAdd: statusButtonAdd,
     typeBussiness: typeBussiness,
     kindBussiness: kindBussiness,

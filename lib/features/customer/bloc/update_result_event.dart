@@ -26,6 +26,11 @@ class ChangeResult extends UpdateResultEvent{
   ChangeResult({required this.value});
 }
 
-class UpdateResult extends UpdateResultEvent{}
+class UpdateResult extends UpdateResultEvent{
+   final String id;
+
+  UpdateResult({required this.id});
+
+}
 
 

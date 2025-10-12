@@ -7,7 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../features/customer/models/city_model.dart';
+import '../bottom_sheet/bottom_sheet_list_city_update_widget.dart';
 import '../bottom_sheet/bottom_sheet_list_city_widget.dart';
+import '../bottom_sheet/bottom_sheet_list_state_update_widget.dart';
 import '../bottom_sheet/bottom_sheet_list_state_widget.dart';
 import '../bottom_sheet/select_image_sheet_widget.dart';
 import '../bottom_sheet/select_time_sheet_widget.dart';
@@ -79,6 +81,19 @@ abstract class DialogManager {
 
   });
 
+  Future<City?> showListStateUpdateSheet({
+    required BuildContext Ex,
+
+
+  });
+  Future<City?> showListCityUpdateSheet({
+
+    required int id,
+    required BuildContext Ex,
+
+
+  });
+
   Future<LatLng?> showSelectLocationSheet({
 
     required LatLng loc,
@@ -110,6 +125,10 @@ class DialogManagerImpl implements DialogManager {
   static bool _isShowSelectLocationSheet = false;
   static bool _isShowSelectDateSheet = false;
   static bool _showSelectImageSheet = false;
+
+
+  static bool _isShowListStateUpdateSheet = false;
+  static bool _isShowListCityUpdateSheet = false;
 
 
   @override
@@ -221,6 +240,30 @@ class DialogManagerImpl implements DialogManager {
 
 
   @override
+  Future<City?> showListCityUpdateSheet({required BuildContext Ex,required int id }) async {
+    if (_isShowListCityUpdateSheet) return null;
+    _isShowListCityUpdateSheet = true;
+  final City? city=  await showModalBottomSheet<City?>(
+      backgroundColor: Theme.of(Ex).cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      context: Ex,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+
+          child:  ListCityUpdateWidget(context: Ex,id: id, ),
+        );
+      },
+    );
+    _isShowListCityUpdateSheet = false;
+    return city;
+  }
+
+
+  @override
   Future<LatLng?> showSelectLocationSheet({required BuildContext Ex,required LatLng loc }) async {
     if (_isShowSelectLocationSheet) return null;
     _isShowSelectLocationSheet = true;
@@ -263,6 +306,30 @@ class DialogManagerImpl implements DialogManager {
       },
     );
     _isShowListStateSheet = false;
+    return city;
+  }
+
+
+  @override
+  Future<City?> showListStateUpdateSheet({required BuildContext Ex, }) async {
+    if (_isShowListStateUpdateSheet) return null;
+    _isShowListStateUpdateSheet = true;
+    final City? city=  await showModalBottomSheet<City?>(
+      backgroundColor: Theme.of(Ex).cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      context: Ex,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+
+          child:  ListStateUpdateWidget(context: Ex, ),
+        );
+      },
+    );
+    _isShowListStateUpdateSheet = false;
     return city;
   }
 

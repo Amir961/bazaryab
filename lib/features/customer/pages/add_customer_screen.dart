@@ -1459,13 +1459,25 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
       BlocConsumer<AddCustomerBloc,AddCustomerState>(
           listenWhen: (previous, current) =>  previous.statusButtonAdd != current.statusButtonAdd ,
-          listener: (context,state){
+          listener: (context,state) async{
 
             if(state.statusButtonAdd == StatusButton.success)
             {
 
              // BlocProvider.of<AddCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
 
+              toastification.show(
+                  type: ToastificationType.success,
+                  style: ToastificationStyle.minimal,
+                  backgroundColor: Colors.grey[100],
+                  //overlayState: globalNavigatorKey.currentState?.overlay,
+                  autoCloseDuration: const Duration(seconds: 3),
+                  title: MyText(text:'موفق',color: Colors.black87,fontWeight: FontWeight.bold,),
+                  description: MyText(text:'مشتری شما با موفقیت اضافه شد',color: Colors.black87,)
+              );
+              await Future.delayed(Duration(seconds: 1));
+
+              context.pop();
 
             }
 
@@ -1475,7 +1487,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 context: context,
                 onTryAgainClick: () {
 
-                  BlocProvider.of<AddCustomerBloc>(context).add(GetOtp());
+                  BlocProvider.of<AddCustomerBloc>(context).add(AddCustomer());
                 },
               );
             }
@@ -1527,10 +1539,10 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
                     onClick: () {
 
-                      BlocProvider.of<AddCustomerBloc>(context).add(AddCustomerOtp());
+                      BlocProvider.of<AddCustomerBloc>(context).add(AddCustomer());
 
                     },
-                    loading: state.statusButtonOtp == StatusButton.loading,
+                    loading: state.statusButtonAdd == StatusButton.loading,
                     text: 'ثبت نهایی',
                     width: inputWidth,
                     height: 45,

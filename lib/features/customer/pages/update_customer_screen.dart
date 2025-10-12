@@ -31,9 +31,11 @@ import '../../../core/utils/assets.dart';
 import '../../../core/utils/values.dart';
 import '../../../injection_container.dart';
 import '../../language/utils/strings.dart';
+import '../models/customer.dart';
 class UpdateCustomerScreen extends StatefulWidget {
   static const routeName = '/update-customer-screen';
-  const UpdateCustomerScreen({super.key});
+  final Customer customer;
+  const UpdateCustomerScreen({required this.customer,super.key});
 
   @override
   State<UpdateCustomerScreen> createState() => _UpdateCustomerScreenState();
@@ -91,32 +93,97 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // حالا نقشه رندر شده
+      setIniData();
 
-      setData();
     });
 
     
 
   }
 
-  setData() async{
+  setIniData() async{
 
     final bloc = BlocProvider.of<UpdateCustomerBloc>(context);
-    await getLocation();
+    _descriptionTextEditingController.text= widget.customer.description??"";
+    _phoneResponsibleTextEditingController.text= widget.customer.inChargeMobile??"";
+    _nameResponsibleTextEditingController.text= widget.customer.inChargeName??"";
+    _nameOwnerSetTextEditingController.text= widget.customer.ownerName??"";
+    _identityTextEditingController.text= widget.customer.ownerNationalId??"";
+    _phoneTextEditingController.text= widget.customer.phone??"";
 
+    final listResult= BlocProvider.of<SplashBloc>(context).state.dataApp?.customerStatus;
+    final valueResult= listResult!.where((element)=>element.title==widget.customer.result).toList();
+
+    final listIndustry= BlocProvider.of<SplashBloc>(context).state.dataApp?.industry;
+    final valueIndustry= listIndustry!.where((element)=>element.key==widget.customer.industry).toList();
+
+    final listType= BlocProvider.of<SplashBloc>(context).state.dataApp?.userType;
+    final valueType= listType!.where((element)=>element.title==widget.customer.type).toList();
+
+   // final listKind= BlocProvider.of<SplashBloc>(context).state.dataApp?.userType;
+   // final valueKind= listType!.where((element)=>element.title==widget.customer.type).toList();
+
+
+
+    final listPosition= BlocProvider.of<SplashBloc>(context).state.dataApp?.position;
+    final valuePosition= listPosition!.where((element)=>element.key==widget.customer.position).toList();
+
+
+
+
+    // bloc.state.copyWith(
+    //   description: widget.customer.description??"",
+    //   responsiblePhoneNumber: widget.customer.inChargeMobile??"",
+    //   responsibleName: widget.customer.inChargeName??"",
+    //   nameOwnerSet: widget.customer.ownerName??"",
+    //   identity: widget.customer.ownerNationalId??"",
+    //   phoneNumberSet: widget.customer.phone??"",
+    //   result: valueResult.isNotEmpty?valueResult.first:null,
+    //   kindBussiness: valueIndustry.isNotEmpty?valueIndustry.first:null,
+    //   typeBussiness: valueType.isNotEmpty?valueType.first:null,
+    //   visitDate: widget.customer.visitP,
+    //
+    // );
+
+    bloc.add(ChangeDescription(value: widget.customer.description??"",));
+    bloc.add(ChangeResponsiblePhoneNumber(value: widget.customer.inChargeMobile??"",));
+    bloc.add(ChangeResponsibleName(value: widget.customer.inChargeName??"",));
+    bloc.add(ChangeNameOwnerSet(value: widget.customer.ownerName??""));
+    bloc.add(ChangeNameIdentity(value: widget.customer.ownerNationalId??""));
+    bloc.add(ChangePhoneNumberSet(value: widget.customer.phone??"",));
+    bloc.add(ChangeTypeBussiness(value: valueType.isNotEmpty?valueType.first:null));
+    bloc.add(ChangeKindBussiness(value: valueIndustry.isNotEmpty?valueIndustry.first:null));
+    bloc.add(ChangeVisitDate(value: '${widget.customer.visit?.split(' ')[1] ?? ''} ${widget.customer.visit?.split(' ')[0]??''}'));
+    bloc.add(ChangeResult(value: valueResult.isNotEmpty?valueResult.first:null));
+    bloc.add(ChangeResponsiblePosition(value: valuePosition.isNotEmpty?valuePosition.first:null));
+    await  setData(null,null);
+
+  }
+
+  setData(double? lat, double? lng) async{
+
+    final bloc = BlocProvider.of<UpdateCustomerBloc>(context);
+    await getLocation(lat,lng);
+
+    bloc.add(ChangeLocation(loc: currentLocation!));
     bloc.add(ChangeTypePage(value: PageAddCustomer.initInfo));
 
 
 
   }
 
-  getLocation() async
+  getLocation(double? lat, double? lng) async
   {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     LocationPermission permission = await Geolocator.requestPermission();
     if (!serviceEnabled || permission == LocationPermission.denied) {
       return;
     }
+    if(lat !=null &&  lng!=null )
+      {
+        currentLocation = LatLng(lat, lng);
+        return;
+      }
 
     Position position = await Geolocator.getCurrentPosition();
     currentLocation = LatLng(position.latitude, position.longitude);
@@ -169,7 +236,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
       return SingleChildScrollView(
         child: Column(
           children: [
-            _code,
+          //  _code,
             Padding(
               padding: const EdgeInsets.only(top: 14.0,bottom: 18),
               child: Row(
@@ -696,7 +763,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
                           return;
                         }
 
-                      final city= await sl<DialogManager>().showListCitySheet(Ex: context, id:(state.selectedState?.id??0).toInt() );
+                      final city= await sl<DialogManager>().showListCityUpdateSheet(Ex: context, id:(state.selectedState?.id??0).toInt() );
                       debugPrint('selected_state_is: ${city?.title}');
                       if(city!=null)
                       {
@@ -724,7 +791,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
                 InkWell(
                     onTap: () async{
 
-                     final state= await sl<DialogManager>().showListStateSheet(Ex: context);
+                     final state= await sl<DialogManager>().showListStateUpdateSheet(Ex: context);
                      debugPrint('selected_state_is: ${state?.title}');
                      if(state!=null)
                        {
@@ -771,6 +838,8 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
             child: MyText(text: 'شماره همراه مسئول',),
           ),
           Input(
+
+            isLock: true,
 
             width: double.infinity,
             controller: _phoneResponsibleTextEditingController,
@@ -1360,49 +1429,15 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
 
 
   Widget get _button =>
+
+
       
-      BlocConsumer<UpdateCustomerBloc,UpdateCustomerState>(
-        listenWhen: (previous, current) =>  previous.statusButtonOtp != current.statusButtonOtp ,
-      listener: (context,state){
-
-        if(state.statusButtonOtp == StatusButton.success)
-        {
-
-          BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
+      BlocBuilder<UpdateCustomerBloc,UpdateCustomerState>(
 
 
-        }
-
-        else if(state.statusButtonOtp== StatusButton.noInternet)
-        {
-          sl<DialogManager>().showNoNetDialog(
-            context: context,
-            onTryAgainClick: () {
-
-              BlocProvider.of<UpdateCustomerBloc>(context).add(GetOtp());
-            },
-          );
-        }
-
-        else if(state.statusButtonOtp == StatusButton.failed)
-        {
-          debugPrint('error_is: statusotp');
-          toastification.show(
-              type: ToastificationType.error,
-              style: ToastificationStyle.minimal,
-              backgroundColor: Colors.grey[100],
-              //overlayState: globalNavigatorKey.currentState?.overlay,
-              autoCloseDuration: const Duration(seconds: 3),
-              title: MyText(text:Strings.of(context).failed_label,color: Colors.black87,fontWeight: FontWeight.bold,),
-              description: MyText(text:state.message,color: Colors.black87,)
-          );
-
-        }
-
-      },
 
       buildWhen: (previous, current) =>
-      previous.statusButtonOtp != current.statusButtonOtp ||
+
       previous.nameSet != current.nameSet ||
           previous.typeBussiness != current.typeBussiness ||
           previous.kindBussiness != current.kindBussiness ||
@@ -1423,27 +1458,27 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
             children: [
               SizedBox(height: 20,),
               ButtonWidget(
-              
-                 isEnable: true,
-                // isEnable: state.nameSet.isNotEmpty &&
-                //            state.phoneNumberSet.isNotEmpty &&
-                //            state.nameOwnerSet.isNotEmpty &&
-                //            state.identity.isNotEmpty &&
-                //            state.responsibleName.isNotEmpty &&
-                //            state.typeBussiness!=null&&
-                //            state.kindBussiness!=null&&
-                //            state.responsiblePosition!=null&&
-                //            state.responsiblePhoneNumber.length==11 ,
+
+               //  isEnable: true,
+                isEnable: state.nameSet.isNotEmpty &&
+                           state.phoneNumberSet.isNotEmpty &&
+                           state.nameOwnerSet.isNotEmpty &&
+                           state.identity.isNotEmpty &&
+                           state.responsibleName.isNotEmpty &&
+                           state.typeBussiness!=null&&
+                           state.kindBussiness!=null&&
+                           state.responsiblePosition!=null&&
+                           state.responsiblePhoneNumber.length==11 ,
 
                 onClick: () {
 
                    BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
 
 
-                 // BlocProvider.of<UpdateCustomerBloc>(context).add(GetOtp());
+
 
                 },
-                loading: state.statusButtonOtp == StatusButton.loading,
+                loading: false,
                 text: 'ثبت و ادامه',
                 width: inputWidth,
                 height: 45,
@@ -1472,13 +1507,24 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
 
       BlocConsumer<UpdateCustomerBloc,UpdateCustomerState>(
           listenWhen: (previous, current) =>  previous.statusButtonAdd != current.statusButtonAdd ,
-          listener: (context,state){
+          listener: (context,state) async{
 
             if(state.statusButtonAdd == StatusButton.success)
             {
 
-             // BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
 
+              toastification.show(
+                  type: ToastificationType.success,
+                  style: ToastificationStyle.minimal,
+                  backgroundColor: Colors.grey[100],
+                  //overlayState: globalNavigatorKey.currentState?.overlay,
+                  autoCloseDuration: const Duration(seconds: 3),
+                  title: MyText(text:'موفق',color: Colors.black87,fontWeight: FontWeight.bold,),
+                  description: MyText(text:'مشتری شما با موفقیت بروزرسانی شد',color: Colors.black87,)
+              );
+              await Future.delayed(Duration(seconds: 1));
+
+              context.pop(true);
 
             }
 
@@ -1488,7 +1534,8 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
                 context: context,
                 onTryAgainClick: () {
 
-                  BlocProvider.of<UpdateCustomerBloc>(context).add(GetOtp());
+                  BlocProvider.of<UpdateCustomerBloc>(context).add(UpdateCustomer(id: widget.customer.id.toString()));
+
                 },
               );
             }
@@ -1527,7 +1574,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
                   ButtonWidget(
 
                     // isEnable: true,
-                    isEnable: state.responsibleCode.isNotEmpty &&
+                    isEnable: 
                         state.description.isNotEmpty &&
                         state.visitDate !=null &&
 
@@ -1540,10 +1587,10 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
 
                     onClick: () {
 
-                      BlocProvider.of<UpdateCustomerBloc>(context).add(AddCustomerOtp());
+                      BlocProvider.of<UpdateCustomerBloc>(context).add(UpdateCustomer(id: widget.customer.id.toString()));
 
                     },
-                    loading: state.statusButtonOtp == StatusButton.loading,
+                    loading: state.statusButtonAdd == StatusButton.loading,
                     text: 'ثبت نهایی',
                     width: inputWidth,
                     height: 45,
@@ -1551,7 +1598,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
                   SizedBox(height: 10,),
                   Visibility(
                       visible:
-                      !(state.responsibleCode.isNotEmpty &&
+                      !(
                           state.description.isNotEmpty &&
                           state.visitDate !=null &&
 

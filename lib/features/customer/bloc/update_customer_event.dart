@@ -5,12 +5,12 @@ part of 'update_customer_bloc.dart';
 sealed class UpdateCustomerEvent {}
 
 class ChangeTypeBussiness extends UpdateCustomerEvent{
-  final UserType value;
+  final UserType? value;
 
   ChangeTypeBussiness({required this.value});
 }
 class ChangeKindBussiness extends UpdateCustomerEvent{
-  final UserType value;
+  final UserType? value;
 
   ChangeKindBussiness({required this.value});
 }
@@ -40,7 +40,7 @@ class ChangeNameIdentity extends UpdateCustomerEvent{
 }
 
 class ChangeResponsiblePosition extends UpdateCustomerEvent{
-  final UserType value;
+  final UserType? value;
 
   ChangeResponsiblePosition({required this.value});
 }
@@ -77,7 +77,7 @@ class ChangeDescription extends UpdateCustomerEvent{
 }
 
 class ChangeResult extends UpdateCustomerEvent{
-  final UserType value;
+  final UserType? value;
 
   ChangeResult({required this.value});
 }
@@ -129,6 +129,11 @@ class ChangeSelectedState extends UpdateCustomerEvent{
   final City? value;
 
   ChangeSelectedState({required this.value});
+}
+class UpdateCustomer extends UpdateCustomerEvent{
+  final String id;
+
+  UpdateCustomer({required this.id});
 }
 
 
