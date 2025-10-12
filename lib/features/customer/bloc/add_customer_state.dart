@@ -99,5 +99,39 @@ part of 'add_customer_bloc.dart';
 
    );
 
+
+   AddCustomerState resetFile()=> AddCustomerState(
+     loc: loc,
+     listCity: listCity,
+     listState: listState,
+     selectedCity: selectedCity,
+     selectedState: selectedState,
+     statusButtonGetCity: statusButtonGetCity,
+     statusButtonGetState: statusButtonGetState,
+     phoneNumberSet: phoneNumberSet,
+     pageAddCustomer: pageAddCustomer,
+
+     message: message,
+     statusButtonOtp: statusButtonOtp,
+     statusButtonAdd: statusButtonAdd,
+     typeBussiness: typeBussiness,
+     kindBussiness: kindBussiness,
+     nameSet: nameSet,
+     nameOwnerSet: nameOwnerSet,
+     identity: identity,
+     responsiblePosition: responsiblePosition,
+     responsibleName: responsibleName,
+     responsiblePhoneNumber: responsiblePhoneNumber,
+     responsibleCode: responsibleCode,
+     visitDate: visitDate,
+     visitTime: visitTime,
+     result: result,
+     description: description,
+     file: null,
+     key: key,
+
+   );
+
+
  }
 

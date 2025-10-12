@@ -63,7 +63,7 @@ class _MyScaffoldState extends State<MyScaffold> {
                           child: InkWell(
                             onTap: (){
                               debugPrint('back_is: ${widget.backFunction}');
-                              if(widget.backFunction!()==null)
+                              if(widget.backFunction!=null)
                                 {
                                   debugPrint('back_is1: ${widget.backFunction}');
                                   widget.backFunction!();

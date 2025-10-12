@@ -329,7 +329,8 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       buildWhen: (previous, current) =>  previous.isOnline != current.isOnline ,
 
-      builder: (context,state)=>ToggleSwitch(
+      builder: (context,state)=>
+          ToggleSwitch(
         initialLabelIndex: state.isOnline,
         totalSwitches: 2,
         activeBgColor: [Colors.orange],

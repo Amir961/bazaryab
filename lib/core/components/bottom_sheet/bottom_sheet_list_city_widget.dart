@@ -70,33 +70,14 @@ class _ListCityWidgetState extends State<ListCityWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   // start();
+    start();
   }
 
   start()async
   {
     await Future.delayed(Duration.zero);
-    if(BlocProvider.of<AddCustomerBloc>(widget.context).state.listCity.isEmpty) {
-      BlocProvider.of<AddCustomerBloc>(widget.context).add(GetCityEvent(widget.id));
-    }
-    else {
-      selectCity = BlocProvider
-          .of<AddCustomerBloc>(widget.context)
-          .state
-          .selectedCity;
-      originList= BlocProvider
-          .of<AddCustomerBloc>(widget.context)
-          .state
-          .listCity;
-      tempList = List.from(BlocProvider
-          .of<AddCustomerBloc>(widget.context)
-          .state
-          .listCity);
 
-      setState(() {
-
-      });
-    }
+    BlocProvider.of<AddCustomerBloc>(widget.context).add(GetCityEvent(widget.id));
     _focusNode.requestFocus();
   }
 

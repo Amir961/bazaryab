@@ -16,6 +16,8 @@ import 'core/utils/theme_helper.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/customer/bloc/add_customer_bloc.dart';
 import 'features/customer/bloc/list_customer_bloc.dart';
+import 'features/customer/bloc/update_customer_bloc.dart';
+import 'features/customer/bloc/update_result_bloc.dart';
 import 'features/home/bloc/home_bloc.dart';
 import 'features/language/data/data_sources/language_data_source.dart';
 import 'features/language/data/repository/language_repository_impl.dart';
@@ -91,6 +93,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => HomeBloc( sl(),sl()));
   sl.registerLazySingleton(() => ListCustomerBloc( sl()));
   sl.registerLazySingleton(() => MessagesBloc( sl()));
+  sl.registerFactory(() => UpdateResultBloc( sl()));
+  sl.registerFactory(() => UpdateCustomerBloc( sl()));
   sl.registerFactory(() => AddCustomerBloc( sl()));
 
 

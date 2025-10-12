@@ -11,7 +11,7 @@ part 'list_customer_state.dart';
 
 class ListCustomerBloc extends Bloc<ListCustomerEvent, ListCustomerState> {
   final ApiService apiService;
-  ListCustomerBloc(this.apiService) : super(ListCustomerState(statusButton: StatusButton.none,message: '')) {
+  ListCustomerBloc(this.apiService) : super(ListCustomerState(statusButton: StatusButton.none,message: '', listCustomer: [])) {
 
     on<GetDataEvent>(_onGetDataEvent);
   }
@@ -24,9 +24,9 @@ class ListCustomerBloc extends Bloc<ListCustomerEvent, ListCustomerState> {
     emit(state.copyWith(statusButton: StatusButton.loading));
 
     try {
-      final responseJson= await apiService.post('signin',queryParameters:{}  );
+      final responseJson= await apiService.get('customer',queryParameters:{}  );
 
-      final user =   User.fromJson(responseJson['data']['user']);
+    //  final user =   User.fromJson(responseJson['data']['user']);
 
 
 

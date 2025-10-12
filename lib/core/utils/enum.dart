@@ -12,6 +12,7 @@ enum StatusButton {
 
 enum PageAddCustomer {
 initInfo,
-completeInfo
+completeInfo,
+  loading
 
 }

@@ -2,12 +2,15 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:fare/core/components/loading/loading_widget.dart';
 
 import 'package:fare/core/components/text/text.dart';
 import 'package:fare/core/res/constant.dart';
 import 'package:fare/core/res/media_res.dart';
 import 'package:fare/core/utils/enum.dart';
-import 'package:fare/features/customer/bloc/add_customer_bloc.dart';
+
+import 'package:fare/features/customer/bloc/update_customer_bloc.dart';
+
 import 'package:fare/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:fare/features/splash/presentation/models/common_setting.dart';
 import 'package:flutter/material.dart';
@@ -23,21 +26,20 @@ import 'package:go_router/go_router.dart';
 import '../../../core/components/button/button_widget.dart';
 import '../../../core/components/dialog/dialog_manager.dart';
 import '../../../core/components/input/input.dart';
-import '../../../core/components/loading/loading_widget.dart';
 import '../../../core/layouts/my_scaffold.dart';
 import '../../../core/utils/assets.dart';
 import '../../../core/utils/values.dart';
 import '../../../injection_container.dart';
 import '../../language/utils/strings.dart';
-class AddCustomerScreen extends StatefulWidget {
-  static const routeName = '/add-customer-screen';
-  const AddCustomerScreen({super.key});
+class UpdateCustomerScreen extends StatefulWidget {
+  static const routeName = '/update-customer-screen';
+  const UpdateCustomerScreen({super.key});
 
   @override
-  State<AddCustomerScreen> createState() => _AddCustomerScreenState();
+  State<UpdateCustomerScreen> createState() => _UpdateCustomerScreenState();
 }
 
-class _AddCustomerScreenState extends State<AddCustomerScreen> {
+class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
 
 
   final TextEditingController _nameSetTextEditingController =
@@ -87,18 +89,19 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     // TODO: implement initState
     super.initState();
 
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // حالا نقشه رندر شده
+
       setData();
-
     });
-  }
 
+    
+
+  }
 
   setData() async{
 
-    final bloc = BlocProvider.of<AddCustomerBloc>(context);
+    final bloc = BlocProvider.of<UpdateCustomerBloc>(context);
     await getLocation();
 
     bloc.add(ChangeTypePage(value: PageAddCustomer.initInfo));
@@ -121,14 +124,11 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
       backFunction: () {
-        final bloc = BlocProvider.of<AddCustomerBloc>(context);
+        final bloc = BlocProvider.of<UpdateCustomerBloc>(context);
         if (bloc.state.pageAddCustomer == PageAddCustomer.completeInfo) {
           bloc.add(ChangeTypePage(value: PageAddCustomer.initInfo));
         } else {
@@ -139,18 +139,18 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
 
 
-      title: 'ثبت مشتری جدید', child: Padding(
+      title: 'بروزرسانی مشتری', child: Padding(
         padding: EdgeInsets.only(
         left: horizontalPadding,right: horizontalPadding,
         top: 20,
 
     ),
-      child: BlocBuilder<AddCustomerBloc,AddCustomerState>(
+      child: BlocBuilder<UpdateCustomerBloc,UpdateCustomerState>(
           buildWhen: (previous, current) =>  previous.pageAddCustomer != current.pageAddCustomer ,
           builder: (context,state){
 
           return   state.pageAddCustomer==PageAddCustomer.loading? LoadingWidget(progressColor: MyColors.primaryColor,):
-
+            
             state.pageAddCustomer==PageAddCustomer.initInfo?
                 _page1
                 : _page2;
@@ -162,45 +162,51 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     );
   }
 
-  Widget get _page2 => SingleChildScrollView(
-    child: Column(
-      children: [
-        _code,
-        Padding(
-          padding: const EdgeInsets.only(top: 14.0,bottom: 18),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              MyText(text: 'موقعیت مکانی مجموعه',fontWeight: FontWeight.bold,fontSize: 16,color: Colors.black,),
-              SizedBox()
-            ],
-          ),
+  Widget get _page2 => Builder(
+
+    builder: (context) {
+
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            _code,
+            Padding(
+              padding: const EdgeInsets.only(top: 14.0,bottom: 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  MyText(text: 'موقعیت مکانی مجموعه',fontWeight: FontWeight.bold,fontSize: 16,color: Colors.black,),
+                  SizedBox()
+                ],
+              ),
+            ),
+            _state,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Divider(color: Colors.grey,),
+            ),
+            _city,
+            SizedBox(height: 12,),
+            _map,
+            _selectDate,
+            SizedBox(height: 10,),
+            _result,
+            _description,
+            SizedBox(height: 10,),
+            _selectFile,
+            SizedBox(height: 10,),
+            _buttonAdd
+
+
+
+          ],
         ),
-        _state,
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Divider(color: Colors.grey,),
-        ),
-        _city,
-        SizedBox(height: 12,),
-        _map,
-        _selectDate,
-        SizedBox(height: 10,),
-        _result,
-        _description,
-        SizedBox(height: 10,),
-        _selectFile,
-        SizedBox(height: 10,),
-        _buttonAdd
-
-
-
-      ],
-    ),
+      );
+    }
   );
 
   Widget get _selectFile =>
-      BlocBuilder<AddCustomerBloc, AddCustomerState>(
+      BlocBuilder<UpdateCustomerBloc, UpdateCustomerState>(
           buildWhen: (previous, current) =>  previous.file != current.file ,
 
           builder: (context, state) {
@@ -220,7 +226,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
                   if (result != null) {
                     File file = File(result.path);
-                    BlocProvider.of<AddCustomerBloc>(context).add(ChangeFile(value:file));
+                    BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeFile(value:file));
 
 
                   } else {
@@ -303,7 +309,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                     child: InkWell(
                       onTap:(){
 
-                        BlocProvider.of<AddCustomerBloc>(context).add(ChangeFile(value:null));
+                        BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeFile(value:null));
 
                       },
                       child: Container(
@@ -354,7 +360,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             maxLines: 5,
             onChange: (value) {
 
-              BlocProvider.of<AddCustomerBloc>(context).add(ChangeDescription(value:value));
+              BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeDescription(value:value));
             },
 
 
@@ -373,7 +379,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       );
 
   Widget get _result =>
-      BlocBuilder<AddCustomerBloc, AddCustomerState>(
+      BlocBuilder<UpdateCustomerBloc, UpdateCustomerState>(
           buildWhen: (previous, current) =>  previous.result != current.result ,
 
           builder: (context, state) {
@@ -438,7 +444,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                       onChanged:(value) {
 
 
-                        BlocProvider.of<AddCustomerBloc>(context).add(ChangeResult(value: value!));
+                        BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeResult(value: value!));
 
 
                       },
@@ -496,7 +502,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           });
 
   Widget get _selectDate =>
-      BlocBuilder<AddCustomerBloc, AddCustomerState>(
+      BlocBuilder<UpdateCustomerBloc, UpdateCustomerState>(
           buildWhen: (previous, current) =>   previous.visitDate != current.visitDate ,
 
           builder: (context, state) {
@@ -513,7 +519,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
                   if(selectDate!=null)
                   {
-                    BlocProvider.of<AddCustomerBloc>(context).add(ChangeVisitDate(value:selectDate));
+                    BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeVisitDate(value:selectDate));
 
                   }
 
@@ -574,6 +580,10 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
               FlutterMap(
                 mapController: mapController,
                 options: currentLocation!=null? MapOptions(
+                  onMapReady: (){
+
+                    mapController.move(currentLocation!, 16);
+                  },
                   initialCenter: currentLocation!,
                   initialZoom: 7,
                     interactionOptions: const InteractionOptions(
@@ -616,9 +626,9 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                   debugPrint('selected_state_is: ${location?.longitude}');
                   if (location != null) {
                     currentLocation=location;
-                    BlocProvider.of<AddCustomerBloc>(context)
+                    BlocProvider.of<UpdateCustomerBloc>(context)
                         .add(ChangeLocation(loc: location));
-                    mapController.move(location, 16);
+                    mapController.move(currentLocation!, 16);
 
                     setState(() {
 
@@ -651,7 +661,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             maxLines: 1,
             onChange: (value) {
 
-              BlocProvider.of<AddCustomerBloc>(context).add(ChangeResponsibleCode(value:value));
+              BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeResponsibleCode(value:value));
             },
 
 
@@ -670,7 +680,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       );
 
   Widget get _city =>
-      BlocBuilder<AddCustomerBloc, AddCustomerState>(
+      BlocBuilder<UpdateCustomerBloc, UpdateCustomerState>(
           buildWhen: (previous, current) =>  previous.selectedCity != current.selectedCity || previous.selectedState != current.selectedState ,
 
           builder: (context, state) {
@@ -690,7 +700,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                       debugPrint('selected_state_is: ${city?.title}');
                       if(city!=null)
                       {
-                        BlocProvider.of<AddCustomerBloc>(context).add(ChangeSelectedCity(value:city));
+                        BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeSelectedCity(value:city));
 
                       }
 
@@ -702,7 +712,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           });
 
   Widget get _state =>
-      BlocBuilder<AddCustomerBloc, AddCustomerState>(
+      BlocBuilder<UpdateCustomerBloc, UpdateCustomerState>(
           buildWhen: (previous, current) =>  previous.selectedState != current.selectedState ,
 
           builder: (context, state) {
@@ -718,8 +728,8 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                      debugPrint('selected_state_is: ${state?.title}');
                      if(state!=null)
                        {
-                         BlocProvider.of<AddCustomerBloc>(context).add(ChangeSelectedState(value:state));
-                         BlocProvider.of<AddCustomerBloc>(context).add(ChangeSelectedCity(value:null));
+                         BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeSelectedState(value:state));
+                         BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeSelectedCity(value:null));
 
                        }
 
@@ -771,7 +781,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             maxLines: 1,
             onChange: (value) {
 
-              BlocProvider.of<AddCustomerBloc>(context).add(ChangeResponsiblePhoneNumber(value:value));
+              BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeResponsiblePhoneNumber(value:value));
             },
 
 
@@ -809,7 +819,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             maxLines: 1,
             onChange: (value) {
 
-              BlocProvider.of<AddCustomerBloc>(context).add(ChangeResponsibleName(value:value));
+              BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeResponsibleName(value:value));
             },
 
 
@@ -828,7 +838,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       );
 
   Widget get _responsiblePosition =>
-      BlocBuilder<AddCustomerBloc, AddCustomerState>(
+      BlocBuilder<UpdateCustomerBloc, UpdateCustomerState>(
           buildWhen: (previous, current) =>  previous.responsiblePosition != current.responsiblePosition ,
 
           builder: (context, state) {
@@ -893,7 +903,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                       onChanged:(value) {
 
 
-                        BlocProvider.of<AddCustomerBloc>(context).add(ChangeResponsiblePosition(value: value!));
+                        BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeResponsiblePosition(value: value!));
 
 
                       },
@@ -970,7 +980,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             maxLines: 1,
             onChange: (value) {
 
-              BlocProvider.of<AddCustomerBloc>(context).add(ChangePhoneNumberSet(value:value));
+              BlocProvider.of<UpdateCustomerBloc>(context).add(ChangePhoneNumberSet(value:value));
             },
 
 
@@ -1008,7 +1018,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             maxLines: 1,
             onChange: (value) {
 
-              BlocProvider.of<AddCustomerBloc>(context).add(ChangeNameIdentity(value:value));
+              BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeNameIdentity(value:value));
             },
 
 
@@ -1046,7 +1056,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             maxLines: 1,
             onChange: (value) {
 
-              BlocProvider.of<AddCustomerBloc>(context).add(ChangeNameOwnerSet(value:value));
+              BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeNameOwnerSet(value:value));
             },
 
 
@@ -1084,7 +1094,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             maxLines: 1,
             onChange: (value) {
 
-              BlocProvider.of<AddCustomerBloc>(context).add(ChangeNameSet(value:value));
+              BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeNameSet(value:value));
             },
 
 
@@ -1103,7 +1113,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       );
 
   Widget get _kindBussiness =>
-      BlocBuilder<AddCustomerBloc, AddCustomerState>(
+      BlocBuilder<UpdateCustomerBloc, UpdateCustomerState>(
           buildWhen: (previous, current) =>  previous.kindBussiness != current.kindBussiness ,
 
           builder: (context, state) {
@@ -1168,7 +1178,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                       onChanged:(value) {
 
 
-                        BlocProvider.of<AddCustomerBloc>(context).add(ChangeKindBussiness(value: value!));
+                        BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeKindBussiness(value: value!));
 
 
                       },
@@ -1226,7 +1236,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           });
 
   Widget get _typeBussiness =>
-      BlocBuilder<AddCustomerBloc, AddCustomerState>(
+      BlocBuilder<UpdateCustomerBloc, UpdateCustomerState>(
           buildWhen: (previous, current) =>  previous.typeBussiness != current.typeBussiness ,
 
           builder: (context, state) {
@@ -1291,7 +1301,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                   onChanged:(value) {
 
 
-                    BlocProvider.of<AddCustomerBloc>(context).add(ChangeTypeBussiness(value: value!));
+                    BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeTypeBussiness(value: value!));
 
 
                   },
@@ -1351,14 +1361,14 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
   Widget get _button =>
       
-      BlocConsumer<AddCustomerBloc,AddCustomerState>(
+      BlocConsumer<UpdateCustomerBloc,UpdateCustomerState>(
         listenWhen: (previous, current) =>  previous.statusButtonOtp != current.statusButtonOtp ,
       listener: (context,state){
 
         if(state.statusButtonOtp == StatusButton.success)
         {
 
-          BlocProvider.of<AddCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
+          BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
 
 
         }
@@ -1369,7 +1379,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             context: context,
             onTryAgainClick: () {
 
-              BlocProvider.of<AddCustomerBloc>(context).add(GetOtp());
+              BlocProvider.of<UpdateCustomerBloc>(context).add(GetOtp());
             },
           );
         }
@@ -1414,20 +1424,23 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
               SizedBox(height: 20,),
               ButtonWidget(
               
-                // isEnable: true,
-                isEnable: state.nameSet.isNotEmpty &&
-                           state.phoneNumberSet.isNotEmpty &&
-                           state.nameOwnerSet.isNotEmpty &&
-                           state.identity.isNotEmpty &&
-                           state.responsibleName.isNotEmpty &&
-                           state.typeBussiness!=null&&
-                           state.kindBussiness!=null&&
-                           state.responsiblePosition!=null&&
-                           state.responsiblePhoneNumber.length==11 ,
+                 isEnable: true,
+                // isEnable: state.nameSet.isNotEmpty &&
+                //            state.phoneNumberSet.isNotEmpty &&
+                //            state.nameOwnerSet.isNotEmpty &&
+                //            state.identity.isNotEmpty &&
+                //            state.responsibleName.isNotEmpty &&
+                //            state.typeBussiness!=null&&
+                //            state.kindBussiness!=null&&
+                //            state.responsiblePosition!=null&&
+                //            state.responsiblePhoneNumber.length==11 ,
 
                 onClick: () {
 
-                  BlocProvider.of<AddCustomerBloc>(context).add(GetOtp());
+                   BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
+
+
+                 // BlocProvider.of<UpdateCustomerBloc>(context).add(GetOtp());
 
                 },
                 loading: state.statusButtonOtp == StatusButton.loading,
@@ -1457,14 +1470,14 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
   Widget get _buttonAdd =>
 
-      BlocConsumer<AddCustomerBloc,AddCustomerState>(
+      BlocConsumer<UpdateCustomerBloc,UpdateCustomerState>(
           listenWhen: (previous, current) =>  previous.statusButtonAdd != current.statusButtonAdd ,
           listener: (context,state){
 
             if(state.statusButtonAdd == StatusButton.success)
             {
 
-             // BlocProvider.of<AddCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
+             // BlocProvider.of<UpdateCustomerBloc>(context).add(ChangeTypePage(value: PageAddCustomer.completeInfo));
 
 
             }
@@ -1475,7 +1488,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 context: context,
                 onTryAgainClick: () {
 
-                  BlocProvider.of<AddCustomerBloc>(context).add(GetOtp());
+                  BlocProvider.of<UpdateCustomerBloc>(context).add(GetOtp());
                 },
               );
             }
@@ -1527,7 +1540,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
                     onClick: () {
 
-                      BlocProvider.of<AddCustomerBloc>(context).add(AddCustomerOtp());
+                      BlocProvider.of<UpdateCustomerBloc>(context).add(AddCustomerOtp());
 
                     },
                     loading: state.statusButtonOtp == StatusButton.loading,

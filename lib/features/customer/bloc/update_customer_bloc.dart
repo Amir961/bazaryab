@@ -2,50 +2,50 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fare/core/network/api_service.dart';
-import 'package:fare/core/utils/enum.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:meta/meta.dart';
 
+import '../../../core/network/api_service.dart';
+import '../../../core/utils/enum.dart';
 import '../../splash/presentation/models/common_setting.dart';
 import '../models/city_model.dart';
 
-part 'add_customer_event.dart';
-part 'add_customer_state.dart';
+part 'update_customer_event.dart';
+part 'update_customer_state.dart';
 
-class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
+class UpdateCustomerBloc extends Bloc<UpdateCustomerEvent, UpdateCustomerState> {
   ApiService apiService;
-      AddCustomerBloc(this.apiService) : super(AddCustomerState(loc: null,  message: '', statusButtonOtp: StatusButton.none, statusButtonAdd:  StatusButton.none, typeBussiness: null, kindBussiness: null, nameSet: '', nameOwnerSet: '', identity: '', responsiblePosition: null, responsibleName: '', responsiblePhoneNumber: '', responsibleCode: '', visitDate: null, visitTime: null, result: null, description: '', file: null, pageAddCustomer: PageAddCustomer.loading, phoneNumberSet: '', key: '', statusButtonGetCity: StatusButton.none,statusButtonGetState: StatusButton.none,selectedCity: null,selectedState: null, listCity: [],listState: [])) {
+  UpdateCustomerBloc(this.apiService) : super(UpdateCustomerState(loc: null,  message: '', statusButtonOtp: StatusButton.none, statusButtonAdd:  StatusButton.none, typeBussiness: null, kindBussiness: null, nameSet: '', nameOwnerSet: '', identity: '', responsiblePosition: null, responsibleName: '', responsiblePhoneNumber: '', responsibleCode: '', visitDate: null, visitTime: null, result: null, description: '', file: null, pageAddCustomer: PageAddCustomer.loading, phoneNumberSet: '', key: '', statusButtonGetCity: StatusButton.none,statusButtonGetState: StatusButton.none,selectedCity: null,selectedState: null, listCity: [],listState: [])) {
 
-        on<ChangeTypeBussiness>(_onChangeTypeBussiness);
-        on<ChangeKindBussiness>(_onChangeKindBussiness);
-        on<ChangeNameSet>(_onChangeNameSet);
-        on<ChangeNameOwnerSet>(_onChangeNameOwnerSet);
-        on<ChangeNameIdentity>(_onChangeNameIdentity);
-        on<ChangeResponsiblePosition>(_onChangeResponsiblePosition);
-        on<ChangeResponsibleName>(_onChangeResponsibleName);
-        on<ChangeResponsiblePhoneNumber>(_onChangeResponsiblePhoneNumber);
-        on<ChangeResponsibleCode>(_onChangeResponsibleCode);
-        on<ChangeVisitDate>(_onChangeVisitDate);
-        on<ChangeVisitTime>(_onChangeVisitTime);
-        on<ChangeDescription>(_onChangeDescription);
-        on<ChangeResult>(_onChangeResult);
-        on<ChangeFile>(_onChangeFile);
-        on<ChangeLocation>(_onChangeLocation);
-        on<ChangeTypePage>(_onChangeTypePage);
-        on<ChangePhoneNumberSet>(_onChangePhoneNumberSet);
-        on<GetOtp>(_onGetOtp);
-       // on<GetOtp>(_onGetOtp);
-        on<GetStateEvent>(_onGetStateEvent);
-        on<GetCityEvent>(_onGetCityEvent);
-        on<ChangeSelectedState>(_onChangeSelectedState);
-        on<ChangeSelectedCity>(_onChangeSelectedCity);
+    on<ChangeTypeBussiness>(_onChangeTypeBussiness);
+    on<ChangeKindBussiness>(_onChangeKindBussiness);
+    on<ChangeNameSet>(_onChangeNameSet);
+    on<ChangeNameOwnerSet>(_onChangeNameOwnerSet);
+    on<ChangeNameIdentity>(_onChangeNameIdentity);
+    on<ChangeResponsiblePosition>(_onChangeResponsiblePosition);
+    on<ChangeResponsibleName>(_onChangeResponsibleName);
+    on<ChangeResponsiblePhoneNumber>(_onChangeResponsiblePhoneNumber);
+    on<ChangeResponsibleCode>(_onChangeResponsibleCode);
+    on<ChangeVisitDate>(_onChangeVisitDate);
+    on<ChangeVisitTime>(_onChangeVisitTime);
+    on<ChangeDescription>(_onChangeDescription);
+    on<ChangeResult>(_onChangeResult);
+    on<ChangeFile>(_onChangeFile);
+    on<ChangeLocation>(_onChangeLocation);
+    on<ChangeTypePage>(_onChangeTypePage);
+    on<ChangePhoneNumberSet>(_onChangePhoneNumberSet);
+    on<GetOtp>(_onGetOtp);
+    // on<GetOtp>(_onGetOtp);
+    on<GetStateEvent>(_onGetStateEvent);
+    on<GetCityEvent>(_onGetCityEvent);
+    on<ChangeSelectedState>(_onChangeSelectedState);
+    on<ChangeSelectedCity>(_onChangeSelectedCity);
   }
+
 
   _onChangeSelectedCity(
       ChangeSelectedCity event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(selectedCity: event.value));
@@ -54,7 +54,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeSelectedState(
       ChangeSelectedState event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(selectedState: event.value));
@@ -63,7 +63,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onGetCityEvent(
       GetCityEvent event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(statusButtonGetCity: StatusButton.loading));
@@ -102,7 +102,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onGetStateEvent(
       GetStateEvent event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(statusButtonGetState: StatusButton.loading));
@@ -141,7 +141,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onGetOtp(
       GetOtp event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(statusButtonOtp: StatusButton.loading));
@@ -179,7 +179,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangePhoneNumberSet(
       ChangePhoneNumberSet event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(phoneNumberSet: event.value));
@@ -187,7 +187,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeTypePage(
       ChangeTypePage event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(pageAddCustomer: event.value));
@@ -195,7 +195,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeLocation(
       ChangeLocation event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(loc: event.loc));
@@ -203,21 +203,21 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeFile(
       ChangeFile event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
-        if(event.value== null)
-          {
-            emit(state.resetFile());
-          }
-        else {
-          emit(state.copyWith(file: event.value));
-        }
+    if(event.value== null)
+    {
+      emit(state.resetFile());
+    }
+    else {
+      emit(state.copyWith(file: event.value));
+    }
   }
 
   _onChangeResult(
       ChangeResult event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(result: event.value));
@@ -225,7 +225,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeDescription(
       ChangeDescription event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(description: event.value));
@@ -233,7 +233,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeVisitTime(
       ChangeVisitTime event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(visitTime: event.value));
@@ -241,7 +241,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeVisitDate(
       ChangeVisitDate event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(visitDate: event.value));
@@ -249,7 +249,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeResponsibleCode(
       ChangeResponsibleCode event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(responsibleCode: event.value));
@@ -257,7 +257,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeResponsiblePhoneNumber(
       ChangeResponsiblePhoneNumber event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(responsiblePhoneNumber: event.value));
@@ -265,7 +265,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeResponsibleName(
       ChangeResponsibleName event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(responsibleName: event.value));
@@ -273,14 +273,14 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeResponsiblePosition(
       ChangeResponsiblePosition event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(responsiblePosition: event.value));
   }
   _onChangeNameIdentity(
       ChangeNameIdentity event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(identity: event.value));
@@ -288,7 +288,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeNameOwnerSet(
       ChangeNameOwnerSet event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(nameOwnerSet: event.value));
@@ -296,7 +296,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeNameSet(
       ChangeNameSet event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(nameSet: event.value));
@@ -304,7 +304,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeKindBussiness(
       ChangeKindBussiness event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(kindBussiness: event.value));
@@ -312,7 +312,7 @@ class AddCustomerBloc extends Bloc<AddCustomerEvent, AddCustomerState> {
 
   _onChangeTypeBussiness(
       ChangeTypeBussiness event,
-      Emitter<AddCustomerState> emit,
+      Emitter<UpdateCustomerState> emit,
       ) async {
 
     emit(state.copyWith(typeBussiness: event.value));

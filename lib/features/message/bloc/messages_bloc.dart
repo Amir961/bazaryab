@@ -11,7 +11,7 @@ part 'messages_state.dart';
 
 class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
   final ApiService apiService;
-  MessagesBloc(this.apiService) : super(MessagesState(statusButton: StatusButton.none,message: '')) {
+  MessagesBloc(this.apiService) : super(MessagesState(statusButton: StatusButton.none,message: '', listMessage: [])) {
 
     on<GetDataEvent>(_onGetDataEvent);
   }
@@ -24,9 +24,9 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
     emit(state.copyWith(statusButton: StatusButton.loading));
 
     try {
-      final responseJson= await apiService.post('signin',queryParameters:{}  );
+      final responseJson= await apiService.get('customer',queryParameters:{}  );
 
-      final user =   User.fromJson(responseJson['data']['user']);
+     // final user =   User.fromJson(responseJson['data']['user']);
 
 
 
